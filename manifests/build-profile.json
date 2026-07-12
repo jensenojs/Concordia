@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "status": "candidate-unverified",
   "component": "concordia",
   "target_arch": "amd64",
   "baseline_commit": "e680a2ecc9cf10a06e664c5b599e23b72582d24b",
@@ -11,6 +10,7 @@
   ],
   "no_default_features": true,
   "jobs": 1,
+  "lock_sha256": "25af8d8ea6826c1e7a0a98dbe28823cdfa6a3bb1fd83cea0fea9b7aaa94d475b",
   "environment": {
     "LLVM_SYS_211_PREFIX": "/usr",
     "LLVM_ZLUDA_PREBUILT": "/usr",
@@ -24,16 +24,22 @@
     "CUDA toolkit and NVIDIA driver interface",
     "Level Zero loader"
   ],
-  "expected_outputs": [
-    {
-      "path": "target/debug/libnvcuda.so",
-      "type": "file"
-    }
+  "command": [
+    "cargo",
+    "build",
+    "-p",
+    "zluda",
+    "--features",
+    "nvidia",
+    "--no-default-features",
+    "--locked",
+    "-j1"
   ],
-  "unresolved_before_artifact": [
-    "CNB Cargo.lock consumption and cache policy",
-    "runtime dynamic dependency file set",
-    "release versus validated dev artifact profile",
-    "component artifact contract"
+  "outputs": [
+    {
+      "path": "lib/libnvcuda.so",
+      "type": "file",
+      "mode": "0755"
+    }
   ]
 }

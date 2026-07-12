@@ -1,5 +1,6 @@
 target/
 Cargo.lock
+!Cargo.lock
 bench/concordia_delta_checkpoint/*.ll
 bench/concordia_delta_checkpoint/*.ptx
 
@@ -7,6 +8,12 @@ bench/concordia_delta_checkpoint/*.ptx
 .idea/
 *.md
 *.py
+!scripts/component_artifact.py
+!tests/test_component_artifact.py
+!scripts/AGENTS.md
+!docs/specs/*.md
+!docs/evidence/*.md
+.work/
 !bench/concordia_claim_audit/*.md
 !bench/concordia_claim_audit/*.py
 !bench/concordia_eval_claims/*.md

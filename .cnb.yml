@@ -9,3 +9,22 @@ $:
         - name: verify Concordia source checkout
           script: |
             bash scripts/verify_source_checkout.sh e680a2ecc9cf10a06e664c5b599e23b72582d24b
+
+  api_trigger_component_build_publish:
+    - git:
+        submodules: false
+        lfs: false
+      runner:
+        cpus: 4
+      timeout: 12h
+      docker:
+        image: docker.cnb.cool/gevico.online/jensen/cxl-lab@sha256:8732c435c97964f2ba95b42fbbcaf79b3c23feffc3b1f7683531917122f4f59e
+      services:
+        - docker
+      stages:
+        - name: build and validate Concordia backend
+          script: |
+            bash scripts/build_component.sh
+        - name: publish Concordia component
+          script: |
+            bash scripts/publish_component.sh "$PWD/.work/component/payload"
