@@ -35,7 +35,7 @@ source commit + Cargo.lock + build-profile + toolchain digest
   → independent fresh pull + repeated checks
 ```
 
-Cargo.lock SHA256固定为`25af8d8ea6826c1e7a0a98dbe28823cdfa6a3bb1fd83cea0fea9b7aaa94d475b`，与本地成功build和旧控制仓冻结副本逐字节一致。`llvm_zluda`通过path dependency读取`ext/llvm-project/llvm-sys`；build只从gitlink`6c4f4634...`稀疏恢复该目录，LLVM二进制和链接输入仍来自固定系统LLVM21。`ext/cuda-tile@72de6de8...`及完整LLVM源码不参与该profile。
+Cargo.lock SHA256固定为`25af8d8ea6826c1e7a0a98dbe28823cdfa6a3bb1fd83cea0fea9b7aaa94d475b`，与本地成功build和旧控制仓冻结副本逐字节一致。`llvm_zluda`通过path dependency读取`ext/llvm-project/llvm-sys`；其build脚本还读取相邻的`cmake/Modules/LLVMVersion.cmake`校验LLVM major version。build从gitlink`6c4f4634...`稀疏恢复`llvm-sys`和仅64 KiB的`cmake/Modules`元数据，LLVM二进制和链接输入仍来自固定系统LLVM21。`ext/cuda-tile@72de6de8...`及完整LLVM源码不参与该profile。
 
 ## 验收边界
 

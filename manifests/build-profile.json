@@ -16,7 +16,8 @@
       "url": "https://github.com/Multi-V-VM/llvm-project",
       "commit": "6c4f463494eeda4e19f1c45a5cab8225024da750",
       "sparse_paths": [
-        "llvm-sys"
+        "llvm-sys",
+        "cmake/Modules"
       ]
     }
   },
