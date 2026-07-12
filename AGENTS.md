@@ -8,7 +8,7 @@
 
 在`cxl-lab` source lock切换前，CNB `gevico.online/jensen/concordia`只是candidate，GitHub `jensenojs/Concordia`仍是primary。固定Type-2功能基线是公开branch `type2-fixed-1p5b`上的`e680a2ecc9cf10a06e664c5b599e23b72582d24b`。旧本地checkout虽然branch名显示`tmatmul`，其HEAD不能反向改写公开`tmatmul` ref。
 
-source迁移只证明公开heads/tags及其可达superproject对象，不证明两个gitlink、Rust build、NVIDIA backend、Type-2或Kimi。局部边界见`docs/specs/cloud-source-authority.md`。
+source迁移只证明公开heads/tags及其可达superproject对象，不证明两个gitlink、Rust build、NVIDIA backend、Type-2或Kimi。局部边界见`docs/specs/cloud-source-authority.md`，执行证据见`docs/evidence/cloud-source-migration.md`。
 
 ## Cloud Build Boundary
 
