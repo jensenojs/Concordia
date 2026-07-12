@@ -22,8 +22,8 @@
     }
   },
   "environment": {
-    "LLVM_SYS_211_PREFIX": "/usr",
-    "LLVM_ZLUDA_PREBUILT": "/usr",
+    "LLVM_SYS_211_PREFIX": "/usr/lib/llvm-21",
+    "LLVM_ZLUDA_PREBUILT": "/usr/lib/llvm-21",
     "CARGO_BUILD_JOBS": "1",
     "MAKEFLAGS": "-j1",
     "CARGO_INCREMENTAL": "0"

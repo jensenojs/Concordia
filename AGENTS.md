@@ -23,7 +23,9 @@ CARGO_INCREMENTAL=0
 cargo build -p zluda --features nvidia --no-default-features -j1
 ```
 
-`--no-default-features`用于排除`zluda`默认`intel`feature；`nvidia`路径仍通过`comgr`/`ptx`触及`ze_runtime_sys`构建，因此固定工具环境必须提供Level Zero loader，不能依赖缺失的`ext/ze_runtime-sys/src/runner/ze_stub.c` fallback。遗漏`LLVM_ZLUDA_PREBUILT=/usr`或在workspace根泛化构建会重新进入未冻结依赖路径。
+固定CNB工具链把LLVM21安装在`/usr/lib/llvm-21`。`manifests/build-profile.json`中的CNB构建环境必须同时使用`LLVM_SYS_211_PREFIX=/usr/lib/llvm-21`和`LLVM_ZLUDA_PREBUILT=/usr/lib/llvm-21`；build脚本在进入Cargo前验证`bin/llvm-config`。本地`/usr`路径只描述旧实验现场，不能复制为CNB构建输入。
+
+`--no-default-features`用于排除`zluda`默认`intel`feature；`nvidia`路径仍通过`comgr`/`ptx`触及`ze_runtime_sys`构建，因此固定工具环境必须提供Level Zero loader，不能依赖缺失的`ext/ze_runtime-sys/src/runner/ze_stub.c` fallback。遗漏`LLVM_ZLUDA_PREBUILT`或在workspace根泛化构建会重新进入未冻结依赖路径。
 
 `manifests/build-profile.json`只保存这条候选构建形状。首次CNB build、测试和artifact fresh pull通过前，不称为已验证构建身份或正式制品。
 

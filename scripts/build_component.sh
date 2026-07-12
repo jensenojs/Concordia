@@ -23,6 +23,8 @@ PY
 readonly LOCK_SHA256=${profile[0]}
 readonly JOBS=${profile[1]}
 [[ $(sha256sum "$ROOT/Cargo.lock" | awk '{print $1}') == "$LOCK_SHA256" ]]
+[[ -x ${profile[2]}/bin/llvm-config ]]
+[[ -x ${profile[3]}/bin/llvm-config ]]
 
 readarray -t llvm_gitlink < <(python3 - "$PROFILE" <<'PY'
 import json, sys
@@ -39,6 +41,7 @@ PY
 [[ $WORK == "$ROOT/.work/component" ]]
 rm -rf "$WORK"
 mkdir -p "$PAYLOAD/lib" "$WORK/evidence"
+"${profile[3]}/bin/llvm-config" --version | tee "$WORK/evidence/llvm-version.txt"
 
 python3 "$ROOT/tests/test_component_artifact.py"
 env \
