@@ -26,6 +26,7 @@ fn main() -> Result<(), VarError> {
         let search_dirs = [
             "/usr/lib/x86_64-linux-gnu",
             "/usr/lib/aarch64-linux-gnu",
+            "/usr/lib64",
             "/usr/local/lib",
             "/usr/lib",
         ];

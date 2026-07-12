@@ -86,6 +86,8 @@ type CuGetExportTableFn = unsafe extern "C" fn(*mut *const c_void, *const CUuuid
 type CuDriverGetVersionFn = unsafe extern "C" fn(*mut c_int) -> CUresult;
 type CuFuncGetAttributeFn =
     unsafe extern "C" fn(*mut c_int, CUfunction_attribute, CUfunction) -> CUresult;
+type CuFuncGetParamInfoFn =
+    unsafe extern "C" fn(CUfunction, size_t, *mut size_t, *mut size_t) -> CUresult;
 type CuFuncSetAttributeFn =
     unsafe extern "C" fn(CUfunction, CUfunction_attribute, c_int) -> CUresult;
 type CuDevicePrimaryCtxRetainFn = unsafe extern "C" fn(*mut CUcontext, CUdevice) -> CUresult;
@@ -153,6 +155,7 @@ pub struct NvidiaCudaFunctions {
     pub cuGetExportTable: Option<CuGetExportTableFn>,
     pub cuDriverGetVersion: Option<CuDriverGetVersionFn>,
     pub cuFuncGetAttribute: Option<CuFuncGetAttributeFn>,
+    pub cuFuncGetParamInfo: Option<CuFuncGetParamInfoFn>,
     pub cuFuncSetAttribute: Option<CuFuncSetAttributeFn>,
     pub cuDevicePrimaryCtxRetain: Option<CuDevicePrimaryCtxRetainFn>,
     pub cuDevicePrimaryCtxRelease_v2: Option<CuDevicePrimaryCtxReleaseFn>,
@@ -241,6 +244,7 @@ pub fn init() -> Result<(), String> {
                 cuGetExportTable: load_fn(lib, "cuGetExportTable"),
                 cuDriverGetVersion: load_fn(lib, "cuDriverGetVersion"),
                 cuFuncGetAttribute: load_fn(lib, "cuFuncGetAttribute"),
+                cuFuncGetParamInfo: load_fn(lib, "cuFuncGetParamInfo"),
                 cuFuncSetAttribute: load_fn(lib, "cuFuncSetAttribute"),
                 cuDevicePrimaryCtxRetain: load_fn(lib, "cuDevicePrimaryCtxRetain"),
                 cuDevicePrimaryCtxRelease_v2: load_fn(lib, "cuDevicePrimaryCtxRelease_v2"),
@@ -339,6 +343,7 @@ impl NvidiaCudaFunctions {
             cuGetExportTable: None,
             cuDriverGetVersion: None,
             cuFuncGetAttribute: None,
+            cuFuncGetParamInfo: None,
             cuFuncSetAttribute: None,
             cuDevicePrimaryCtxRetain: None,
             cuDevicePrimaryCtxRelease_v2: None,
@@ -833,6 +838,21 @@ pub fn cuModuleGetFunction(hfunc: *mut CUfunction, hmod: CUmodule, name: *const 
     999
 }
 
+pub fn cuModuleGetGlobal_v2(
+    dptr: *mut CUdeviceptr,
+    bytes: *mut size_t,
+    hmod: CUmodule,
+    name: *const c_char,
+) -> i32 {
+    if let Some(funcs) = get_cuda_funcs() {
+        if let Some(f) = funcs.cuModuleGetGlobal_v2 {
+            let result = unsafe { f(dptr, bytes, hmod, name) };
+            return cuda_result_to_int(result);
+        }
+    }
+    801
+}
+
 pub fn cuFuncGetAttribute(pi: *mut c_int, attrib: CUfunction_attribute, hfunc: CUfunction) -> i32 {
     if let Some(funcs) = get_cuda_funcs() {
         if let Some(f) = funcs.cuFuncGetAttribute {
@@ -841,6 +861,21 @@ pub fn cuFuncGetAttribute(pi: *mut c_int, attrib: CUfunction_attribute, hfunc: C
         }
     }
     999
+}
+
+pub fn cuFuncGetParamInfo(
+    hfunc: CUfunction,
+    param_index: size_t,
+    param_offset: *mut size_t,
+    param_size: *mut size_t,
+) -> i32 {
+    if let Some(funcs) = get_cuda_funcs() {
+        if let Some(f) = funcs.cuFuncGetParamInfo {
+            let result = unsafe { f(hfunc, param_index, param_offset, param_size) };
+            return cuda_result_to_int(result);
+        }
+    }
+    801
 }
 
 pub fn cuLaunchKernel(

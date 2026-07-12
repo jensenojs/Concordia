@@ -213,6 +213,32 @@ pub(crate) fn get_attribute(
     Ok(())
 }
 
+#[cfg(all(
+    feature = "nvidia",
+    not(feature = "amd"),
+    not(feature = "intel"),
+    not(feature = "tenstorrent")
+))]
+pub(crate) fn get_param_info(
+    hfunc: &super::module::NvidiaKernel,
+    param_index: usize,
+    param_offset: *mut usize,
+    param_size: *mut usize,
+) -> CUresult {
+    match nvidia_runtime_sys::cuFuncGetParamInfo(
+        hfunc.cuda_function,
+        param_index,
+        param_offset,
+        param_size,
+    ) {
+        0 => Ok(()),
+        1 => Err(CUerror::INVALID_VALUE),
+        400 => Err(CUerror::INVALID_HANDLE),
+        801 => Err(CUerror::NOT_SUPPORTED),
+        _ => Err(CUerror::UNKNOWN),
+    }
+}
+
 #[cfg(feature = "intel")]
 pub(crate) fn get_attribute(
     pi: &mut i32,

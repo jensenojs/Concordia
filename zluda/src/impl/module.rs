@@ -3494,6 +3494,32 @@ pub(crate) fn get_function(
     Ok(())
 }
 
+#[cfg(all(
+    feature = "nvidia",
+    not(feature = "amd"),
+    not(feature = "intel"),
+    not(feature = "tenstorrent")
+))]
+pub(crate) fn get_global_v2(
+    dptr: *mut CUdeviceptr,
+    bytes: *mut usize,
+    hmod: &Module,
+    name: *const ::core::ffi::c_char,
+) -> CUresult {
+    if (dptr.is_null() && bytes.is_null()) || name.is_null() {
+        return Err(CUerror::INVALID_VALUE);
+    }
+
+    match nvidia_runtime_sys::cuModuleGetGlobal_v2(dptr, bytes, hmod.cuda_module, name) {
+        0 => Ok(()),
+        1 => Err(CUerror::INVALID_VALUE),
+        400 => Err(CUerror::INVALID_HANDLE),
+        500 => Err(CUerror::NOT_FOUND),
+        801 => Err(CUerror::NOT_SUPPORTED),
+        _ => Err(CUerror::UNKNOWN),
+    }
+}
+
 // NVIDIA kernel structure
 #[cfg(all(
     feature = "nvidia",
