@@ -11,6 +11,15 @@
   "no_default_features": true,
   "jobs": 1,
   "lock_sha256": "25af8d8ea6826c1e7a0a98dbe28823cdfa6a3bb1fd83cea0fea9b7aaa94d475b",
+  "required_gitlinks": {
+    "ext/llvm-project": {
+      "url": "https://github.com/Multi-V-VM/llvm-project",
+      "commit": "72de6de81eb398c7ed763d3641365ed77cdef01d",
+      "sparse_paths": [
+        "llvm-sys"
+      ]
+    }
+  },
   "environment": {
     "LLVM_SYS_211_PREFIX": "/usr",
     "LLVM_ZLUDA_PREBUILT": "/usr",

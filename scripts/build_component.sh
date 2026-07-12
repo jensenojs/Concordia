@@ -24,6 +24,18 @@ readonly LOCK_SHA256=${profile[0]}
 readonly JOBS=${profile[1]}
 [[ $(sha256sum "$ROOT/Cargo.lock" | awk '{print $1}') == "$LOCK_SHA256" ]]
 
+readarray -t llvm_gitlink < <(python3 - "$PROFILE" <<'PY'
+import json, sys
+g=json.load(open(sys.argv[1]))["required_gitlinks"]["ext/llvm-project"]
+print(g["url"])
+print(g["commit"])
+for path in g["sparse_paths"]:
+    print(path)
+PY
+)
+"$ROOT/scripts/restore_required_gitlink.sh" \
+    ext/llvm-project "${llvm_gitlink[0]}" "${llvm_gitlink[1]}" "${llvm_gitlink[@]:2}"
+
 [[ $WORK == "$ROOT/.work/component" ]]
 rm -rf "$WORK"
 mkdir -p "$PAYLOAD/lib" "$WORK/evidence"

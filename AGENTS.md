@@ -44,6 +44,6 @@ Kimi benchmark脚本的`status=pass`只表示runner退出0并解析到tokens/tps
 ## Boundaries
 
 - `target/`、AOF、runner日志、模型文件和benchmark CSV/JSONL是生成状态或外部输入，不提交到组件源码历史。
-- `ext/llvm-project`和`ext/cuda-tile`是gitlink；source迁移不初始化它们。
+- `ext/llvm-project`和`ext/cuda-tile`是gitlink；source迁移不初始化它们。组件build只按profile恢复`ext/llvm-project/llvm-sys`稀疏子树，因为`llvm_zluda`将其作为Rust path dependency；完整LLVM源码和cuda-tile仍不进入当前build。
 - 本仓不复制QEMU、CXLMemSim、kernel、llama或guest的build profile。
 - 新CNB任务必须记录repo、branch、exact SHA、event、runner资源、toolchain digest、feature集合、stage和首个失败日志。
