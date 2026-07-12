@@ -1,0 +1,11 @@
+$:
+  api_trigger_source_probe:
+    - git:
+        submodules: false
+        lfs: false
+      runner:
+        cpus: 2
+      stages:
+        - name: verify Concordia source checkout
+          script: |
+            bash scripts/verify_source_checkout.sh e680a2ecc9cf10a06e664c5b599e23b72582d24b
