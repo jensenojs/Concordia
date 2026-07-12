@@ -1,0 +1,8 @@
+{
+  "archive_sha256": "f896b8cf1e2b7a59f33815881b16869d41d7fef97f9bab6e069cc47dc663d5ae",
+  "digest": "sha256:0455178c2b050b31e4e9fa7cf80bfafd9f6fd2fba41f52f869ef7d0782c1d710",
+  "manifest_sha256": "faaa06c28ce4e9e352c1f9a3f46aaf5ae852637641b3511735ef8859ec569c16",
+  "profile_sha256": "8532dbe39777ca2c18eadaa0ab615a4c6bf499d354e13be2aee37131d6b81cf3",
+  "repository": "docker.cnb.cool/gevico.online/jensen/concordia",
+  "source_commit": "0f7b55aac64be9bc3bdac10020f2a227913ddb66"
+}
