@@ -6,7 +6,7 @@
 
 ## Cloud Source Authority
 
-在`cxl-lab` source lock切换前，CNB `gevico.online/jensen/concordia`只是candidate，GitHub `jensenojs/Concordia`仍是primary。固定Type-2功能基线是公开branch `type2-fixed-1p5b`上的`e680a2ecc9cf10a06e664c5b599e23b72582d24b`。旧本地checkout虽然branch名显示`tmatmul`，其HEAD不能反向改写公开`tmatmul` ref。
+CNB `gevico.online/jensen/concordia`是源码与本仓制品primary，GitHub `jensenojs/Concordia`保存相同SHA公开镜像；该状态由`cxl-lab@7a68b5c457945965560ca7be6991bb065166bb20`切换生效。固定Type-2功能基线是公开branch `type2-fixed-1p5b`上的`e680a2ecc9cf10a06e664c5b599e23b72582d24b`。旧本地checkout虽然branch名显示`tmatmul`，其HEAD不能反向改写公开`tmatmul` ref。
 
 source迁移只证明公开heads/tags及其可达superproject对象，不证明两个gitlink、Rust build、NVIDIA backend、Type-2或Kimi。局部边界见`docs/specs/cloud-source-authority.md`，执行证据见`docs/evidence/cloud-source-migration.md`。
 
@@ -27,7 +27,7 @@ cargo build -p zluda --features nvidia --no-default-features -j1
 
 `--no-default-features`用于排除`zluda`默认`intel`feature；`nvidia`路径仍通过`comgr`/`ptx`触及`ze_runtime_sys`构建，因此固定工具环境必须提供Level Zero loader，不能依赖缺失的`ext/ze_runtime-sys/src/runner/ze_stub.c` fallback。遗漏`LLVM_ZLUDA_PREBUILT`或在workspace根泛化构建会重新进入未冻结依赖路径。
 
-`manifests/build-profile.json`只保存这条候选构建形状。首次CNB build、测试和artifact fresh pull通过前，不称为已验证构建身份或正式制品。
+`manifests/build-profile.json`是当前CNB构建输入权威。任务`cnb-ldg-1jtb4qasj`已按该profile完成构建和发布，独立任务`cnb-00g-1jtb5b599`已按digest恢复并验证；正式引用位于`manifests/artifacts/concordia.json`，失败链和证明边界位于`docs/evidence/cloud-component-artifact.md`。
 
 ## Correctness Boundary
 
@@ -46,6 +46,6 @@ Kimi benchmark脚本的`status=pass`只表示runner退出0并解析到tokens/tps
 ## Boundaries
 
 - `target/`、AOF、runner日志、模型文件和benchmark CSV/JSONL是生成状态或外部输入，不提交到组件源码历史。
-- `ext/llvm-project`和`ext/cuda-tile`是gitlink；source迁移不初始化它们。组件build只按profile恢复`ext/llvm-project/llvm-sys`稀疏子树，因为`llvm_zluda`将其作为Rust path dependency；完整LLVM源码和cuda-tile仍不进入当前build。
+- `ext/llvm-project`和`ext/cuda-tile`是gitlink；source迁移不初始化它们。组件build只按profile恢复`ext/llvm-project/llvm-sys`与其读取的`ext/llvm-project/cmake/Modules`；完整LLVM源码和cuda-tile仍不进入当前build。
 - 本仓不复制QEMU、CXLMemSim、kernel、llama或guest的build profile。
 - 新CNB任务必须记录repo、branch、exact SHA、event、runner资源、toolchain digest、feature集合、stage和首个失败日志。
