@@ -14,7 +14,7 @@
   "required_gitlinks": {
     "ext/llvm-project": {
       "url": "https://github.com/Multi-V-VM/llvm-project",
-      "commit": "72de6de81eb398c7ed763d3641365ed77cdef01d",
+      "commit": "6c4f463494eeda4e19f1c45a5cab8225024da750",
       "sparse_paths": [
         "llvm-sys"
       ]
