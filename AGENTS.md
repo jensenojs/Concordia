@@ -2,11 +2,11 @@
 
 本仓保存Concordia/ZLUDA CUDA Driver API兼容层、NVIDIA backend、PTX/CUBIN处理和教程Kimi benchmark入口。它负责host侧`libnvcuda.so`及Type-2 backend计算语义；不拥有QEMU设备模型、guest kernel、CXLMemSim server、模型文件或跨组件run specification。
 
-项目目标、正确性层级与当前工程入口由`/home/jensen/Projects/cxl-memsim/AGENTS.md`定义。CNB独立checkout从`gevico.online/jensen/cxl-lab`有效控制ref `refs/heads/fixed-1p5b-control`读取exact source lock。本机活跃云端组件checkout是`/home/jensen/Projects/cxl-cloud/concordia/`；`/home/jensen/Projects/cxl-memsim/Concordia/`保留既有本地实验现场。
+项目目标、正确性层级与实时工程入口由`/home/jensen/Projects/cxl-memsim/AGENTS.md`定义。跨组件exact source从`cxl-lab/manifests/sources.lock.json`读取。本机活跃云端组件checkout是`/home/jensen/Projects/cxl-cloud/concordia/`；`/home/jensen/Projects/cxl-memsim/Concordia/`保留既有本地实验现场。
 
 ## Cloud Source Authority
 
-CNB `gevico.online/jensen/concordia`是源码与本仓制品primary，GitHub `jensenojs/Concordia`保存相同SHA公开镜像；该状态由`cxl-lab@7a68b5c457945965560ca7be6991bb065166bb20`切换生效。固定Type-2功能基线是公开branch `type2-fixed-1p5b`上的`e680a2ecc9cf10a06e664c5b599e23b72582d24b`。旧本地checkout虽然branch名显示`tmatmul`，其HEAD不能反向改写公开`tmatmul` ref。
+CNB `gevico.online/jensen/concordia`是源码与本仓制品primary，GitHub `jensenojs/Concordia`保存相同SHA公开镜像。branch用于开发发现，source lock中的exact commit才是跨组件运行输入；旧本地checkout不能反向定义公开ref或云端artifact。
 
 source迁移只证明公开heads/tags及其可达superproject对象，不证明两个gitlink、Rust build、NVIDIA backend、Type-2或Kimi。局部边界见`docs/specs/cloud-source-authority.md`，执行证据见`docs/evidence/cloud-source-migration.md`。
 
@@ -27,7 +27,7 @@ cargo build -p zluda --features nvidia --no-default-features -j1
 
 `--no-default-features`用于排除`zluda`默认`intel`feature；`nvidia`路径仍通过`comgr`/`ptx`触及`ze_runtime_sys`构建，因此固定工具环境必须提供Level Zero loader，不能依赖缺失的`ext/ze_runtime-sys/src/runner/ze_stub.c` fallback。遗漏`LLVM_ZLUDA_PREBUILT`或在workspace根泛化构建会重新进入未冻结依赖路径。
 
-`manifests/build-profile.json`是当前CNB构建输入权威。任务`cnb-ldg-1jtb4qasj`已按该profile完成构建和发布，独立任务`cnb-00g-1jtb5b599`已按digest恢复并验证；正式引用位于`manifests/artifacts/concordia.json`，失败链和证明边界位于`docs/evidence/cloud-component-artifact.md`。
+`manifests/build-profile.json`是CNB构建输入权威；正式引用位于`manifests/artifacts/concordia.json`，任务、失败链和证明边界位于`docs/evidence/cloud-component-artifact.md`。本文件不复制完成任务或digest。
 
 ## Correctness Boundary
 
@@ -37,7 +37,7 @@ Kimi benchmark脚本的`status=pass`只表示runner退出0并解析到tokens/tps
 
 ## Commands
 
-- source probe: `bash scripts/verify_source_checkout.sh e680a2ecc9cf10a06e664c5b599e23b72582d24b`
+- source probe: `bash scripts/verify_source_checkout.sh <expected-source-sha>`
 - validated local build: `LLVM_SYS_211_PREFIX=/usr LLVM_ZLUDA_PREBUILT=/usr CARGO_BUILD_JOBS=1 MAKEFLAGS=-j1 CARGO_INCREMENTAL=0 cargo build -p zluda --features nvidia --no-default-features -j1`
 - inspect feature graph: `cargo tree -p zluda --no-default-features --features nvidia -i ze_runtime_sys`
 
